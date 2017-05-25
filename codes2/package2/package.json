@@ -1,0 +1,6 @@
+{
+  "name": "package2",
+  "version": "0.0.1",
+  "//": "下述main只能指向一个js文件",
+  "main": "./lib/test.js"
+}

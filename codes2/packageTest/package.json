@@ -1,0 +1,16 @@
+{
+  "name": "zc",
+  "version": "1.0.0",
+  "description": "this is a test for npm install -g",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test",
+    "npm",
+    "install"
+  ],
+  "author": "zhangchao",
+  "license": "ISC"
+}

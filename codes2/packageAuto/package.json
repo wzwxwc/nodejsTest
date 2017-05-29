@@ -1,0 +1,14 @@
+{
+  "name": "zc",
+  "version": "1.2.0",
+  "description": "这是一个描述文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "哈哈"
+  ],
+  "author": "zc",
+  "license": "ISC"
+}

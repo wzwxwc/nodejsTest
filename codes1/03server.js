@@ -3,7 +3,6 @@ var http = require('http');
 //全局中不是已经下载了一个express模块吗？
 //为什么无法引入？
 
-
 function start() {
     http.createServer(function (request, response) {
         console.log("request received");

@@ -36,6 +36,6 @@ var server = http.createServer(function (request, response) {
         });
     })
 ;
-server.listen(9966);
+server.listen(6666);
 // var sys = require("util");
 // sys.puts("Server running at http://localhost:8080/");

@@ -1,10 +1,10 @@
 [
   {
-    aa: 123,
-    bb: "hello"
+    "aa": 123,
+    "bb": "hello"
   },
   {
-    aa: 23,
-    bb: "good morning"
+    "aa": 23,
+    "bb": "good morning"
   }
 ]

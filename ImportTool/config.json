@@ -1,0 +1,28 @@
+{
+  "//": "mongo的参数配置",
+  mongo: {
+    "//": "ip地址",
+    "ip": "localhost",
+    "//": "端口",
+    "port": "27017",
+    "//": "数据库名",
+    "db": "zcuse",
+    "//": "集合名称",
+    "collection": "vip"
+  },
+  "//": "mysql的参数配置",
+  mysql: {
+    "//": "ip地址",
+    "host": "localhost",
+    "//": "数据库名",
+    "database": "zctest",
+    "//": "用户名",
+    "user": "root",
+    "//": "密码",
+    "password": "root",
+    "//": "表",
+    "tables": [
+      "vip"
+    ]
+  }
+}

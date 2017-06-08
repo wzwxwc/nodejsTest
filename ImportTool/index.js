@@ -43,7 +43,7 @@ function fnInitMongo(jsonConfig) {
     var dbUrlDefault = "mongodb://" + jsonConfigMongo.ip + ":" + jsonConfigMongo.port + "/" + jsonConfigMongo.collection;
 }
 
-//导出到mysql
+//从mysql中导入数据
 function fnExportDataFromMysql(jsonConfigMysql) {
     var connMysql = mysql.createConnection({
         host: jsonConfigMysql.host,
@@ -72,12 +72,12 @@ function fnExportDataFromMysql(jsonConfigMysql) {
     // connMysql.end();
 }
 
-//导出到postgresql
+//从postgresql导入数据
 function fnExportDataFromPostgresql() {
 
 }
 
-//导出到oracle
+//从oracle导入数据
 function fnExportDataFromOracle() {
 
 }

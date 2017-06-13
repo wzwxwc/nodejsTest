@@ -4,6 +4,7 @@
 var MongoClient = require("mongodb").MongoClient;
 var DB_URL = "mongodb://localhost:27017/zcuse";
 
+
 function insertData(db) {
     var colVip = db.collection('vip');
     var data = {"name": "node", "age": 22, "addr": "nb", "addTime": new Date()};

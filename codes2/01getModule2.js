@@ -4,6 +4,8 @@
 var module1 = require("./01module");
 module1.setName("111");
 var module2 = require("./01module");
+module1.sayHello();
+module2.sayHello();
 module2.setName("222");
 module1.sayHello();
 module2.sayHello();

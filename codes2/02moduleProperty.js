@@ -13,3 +13,5 @@ console.log("module.parent is " + module.parent);
 console.log("module.children is " + module.children);
 //表示模块对外输出的值。
 console.log("module.exports is " + module.exports);
+//
+console.log("module.paths is" + module.paths);

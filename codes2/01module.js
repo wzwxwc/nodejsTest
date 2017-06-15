@@ -8,6 +8,7 @@ exports.setName = function (argsName) {
 };
 exports.sayHello = function () {
     console.log("你好：" + name);
-    console.log(module);
+    // console.log(module);
 };
 //当其他模块调用这个模块的时候，返回exports这个对象！
+//exports指向module.exports

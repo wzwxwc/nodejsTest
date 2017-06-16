@@ -18,6 +18,9 @@ function findDataResult(db) {
     var data = db.collection('weatherinfo').find({city: "101220702"}).sort({"timeupdate": -1}).limit(1).toArray(function (err, result) {
         console.log(result[0]);
     });
+    var count=db.collection('weatherinfo').count(function (err,count) {
+        console.log(count);
+    });
 }
 
 MongoClient.connect(DB_URL, function (error, db) {

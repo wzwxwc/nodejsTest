@@ -3,25 +3,29 @@
  * Created by zc on 2017/6/14.
  */
 
-console.log(__dirname + "/config.js");
 var config = require(__dirname + "/config.js");
-var arrCsvs = config.arrCsvs;
+var arrExcels = config.arrExcels;
 var mongodbUrl = config.mongodbUrl;
 var fs = require("fs");
-var csv_parse = require("csv-parse");
 var mongoClient = require("mongodb").MongoClient;
 const uuidV4 = require('uuid/v4');
+var XLSX = require('xlsx');
+
+
+var workbook = XLSX.readFile(__dirname + '/data/报警记录.xls');
+var arrFieldInfos = XLSX.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+console.log(arrFieldInfos);
 
 
 //开始执行的入口
 function fnRun() {
-    for (var i = 0; i < arrCsvs.length; i++) {
-        var oneCsv = arrCsvs[i];
-        var csvFilePath = oneCsv.csvFilePath;
-        var csvName = oneCsv.name;
-        var objFieldMatchList = oneCsv.objFieldMatchList;
-        var csvGisData = oneCsv.gisData;
-        fs.readFile(csvFilePath, {
+    for (var i = 0; i < arrExcels.length; i++) {
+        var oneExcel = arrExcels[i];
+        var excelFilePath = oneExcel.excelFilePath;
+        var excelName = oneExcel.name;
+        var objFieldMatchList = oneExcel.objFieldMatchList;
+        var excelGisData = oneExcel.gisData;
+        fs.readFile(excelFilePath, {
             "encoding": "utf8"
         }, function (err, data) {
             if (err) {
@@ -32,8 +36,8 @@ function fnRun() {
                 if (err2) {
                     throw err2;
                 }
-                var arrDocuments = fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, csvGisData);
-                fnInsetToMongo(csvName, arrDocuments);
+                var arrDocuments = fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, excelGisData);
+                fnInsetToMongo(excelName, arrDocuments);
             })
         });
     }
@@ -104,7 +108,7 @@ function fnGenerateGeoJson(configCsvGisData, oneCsvRow) {
         objGeoJson.coordinates = [];
         //从csv中拿到的都是字符串吧？
         var valueLng = oneCsvRow[configCsvGisData.fieldLng];
-        if (isNaN(valueLng)||valueLng.trim()=="") {
+        if (isNaN(valueLng) || valueLng.trim() == "") {
             //不可以转换为数字
             valueLng = 0;
         } else {
@@ -113,7 +117,7 @@ function fnGenerateGeoJson(configCsvGisData, oneCsvRow) {
         objGeoJson.coordinates.push(valueLng);
 
         var valueLat = oneCsvRow[configCsvGisData.fieldLat];
-        if (isNaN(valueLat)||valueLat.trim()=="") {
+        if (isNaN(valueLat) || valueLat.trim() == "") {
             //不可以转换为数字
             valueLat = 0;
         } else {

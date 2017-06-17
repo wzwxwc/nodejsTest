@@ -9,7 +9,7 @@ var config = {
             //导入数据库后的名称
             name: "user_safety_SKYNETVIDEO",
             //excel文件的路径
-            excelFilePath: "E:\\nodeCodes\\nodejsTest\\ImportTool\\excel\\data\\监控点信息.excel",
+            excelFilePath: "E:\\nodeCodes\\nodejsTest\\ImportTool\\suzhouImport\\data\\天网视频视频点信息20170614.xls",
             //字段匹配对象————todo：下述这个字段匹配信息最好从excel或csv文件(从powerdesigner中得到)读取
             objFieldMatchList: {
                 "编号": "ID",
@@ -61,7 +61,7 @@ var config = {
          }*/
     ],
     //mongodb的连接字符串
-    // mongodbUrl: "mongodb://localhost:27017/zc"
-    mongodbUrl: "mongodb://admin:safety123@172.17.10.238:27017/mapEditor"
+    mongodbUrl: "mongodb://localhost:27017/zc"
+    // mongodbUrl: "mongodb://admin:safety123@172.17.10.238:27017/mapEditor"
 };
 module.exports = config;

@@ -12,11 +12,6 @@ const uuidV4 = require('uuid/v4');
 var XLSX = require('xlsx');
 
 
-var workbook = XLSX.readFile(__dirname + '/data/报警记录.xls');
-var arrFieldInfos = XLSX.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
-console.log(arrFieldInfos);
-
-
 //开始执行的入口
 function fnRun() {
     for (var i = 0; i < arrExcels.length; i++) {
@@ -25,21 +20,11 @@ function fnRun() {
         var excelName = oneExcel.name;
         var objFieldMatchList = oneExcel.objFieldMatchList;
         var excelGisData = oneExcel.gisData;
-        fs.readFile(excelFilePath, {
-            "encoding": "utf8"
-        }, function (err, data) {
-            if (err) {
-                throw err;
-            }
-            csv_parse(data, {columns: true, trim: true}, function (err2, arrCsvRows) {
-                // Your CSV data is in an array of arrys passed to this callback as arrRows.
-                if (err2) {
-                    throw err2;
-                }
-                var arrDocuments = fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, excelGisData);
-                fnInsetToMongo(excelName, arrDocuments);
-            })
-        });
+
+        var workbook = XLSX.readFile(excelFilePath);
+        var arrCsvRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+        var arrDocuments = fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, excelGisData);
+        fnInsetToMongo(excelName, arrDocuments);
     }
 }
 

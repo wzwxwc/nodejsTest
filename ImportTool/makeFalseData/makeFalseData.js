@@ -7,8 +7,8 @@ var XLSX = require('xlsx');
 const uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
 
-var DB_URL = "mongodb://localhost:27017/zc";
-// var DB_URL = "mongodb://admin:safety123@172.17.10.238:27017/mapEditor";
+// var DB_URL = "mongodb://localhost:27017/zc";
+var DB_URL = "mongodb://admin:safety123@172.17.10.238:27017/mapEditor";
 var dirPath = __dirname + "\\data2\\";
 var dbMongo = null;
 var bRemoveBefor = true;  //是否删除collection中之前已经有的所有数据
@@ -49,7 +49,7 @@ function fnExcelToJson(strExcelPathAndName) {
 function fnCreateFalsData(arrFieldInfos, collectionName) {
     var arrDocuments = [];
     //每个collection制造6条假文档
-    var numFalseData = 6;
+    var numFalseData = 300;
     var col = dbMongo.collection(collectionName);
     //先清空collectionName下的所有的文档！
     if (bRemoveBefor) {
@@ -97,7 +97,7 @@ function fnCreateOneDocument(arrFieldInfos, rowIndex) {
     for (var i = 0; i < arrFieldInfos.length; i++) {
         var oneFieldInfo = arrFieldInfos[i];
         //主键默认从1计数
-        oneDocument._id = rowIndex;
+        oneDocument._id = rowIndex.toString();
         if (oneFieldInfo.P) {
             //是主键，不处理，默认都使用_id来作为主键
             // oneDocument[oneFieldInfo.Code] = rowIndex;
@@ -111,7 +111,8 @@ function fnCreateOneDocument(arrFieldInfos, rowIndex) {
             // dbMongo.collection('weatherinfo').count(function (err,count) {
             //     console.log(count);
             // });
-            tagOfDocument[oneFieldInfo.Code] = Math.floor(Math.random() * 6);
+            //因为主键_id是字符串，所以，外键也用字符串
+            tagOfDocument[oneFieldInfo.Code] = Math.floor(Math.random() * 6).toString();
             continue;
         }
         if (oneFieldInfo["Code"] == "LONGITUDE") {

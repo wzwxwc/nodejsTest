@@ -4,7 +4,7 @@
  */
 
 var config = require(__dirname + "/config.js");
-var arrExcels = config.arrExcels;
+var configArrExcels = config.arrExcels;
 var mongodbUrl = config.mongodbUrl;
 var fs = require("fs");
 var mongoClient = require("mongodb").MongoClient;
@@ -14,17 +14,15 @@ var XLSX = require('xlsx');
 
 //开始执行的入口
 function fnRun() {
-    for (var i = 0; i < arrExcels.length; i++) {
-        var oneExcel = arrExcels[i];
-        var excelFilePath = oneExcel.excelFilePath;
-        var excelName = oneExcel.name;
-        var objFieldMatchList = oneExcel.objFieldMatchList;
-        var excelGisData = oneExcel.gisData;
-
+    for (var i = 0; i < configArrExcels.length; i++) {
+        var configOneExcel = configArrExcels[i];
+        var excelFilePath = configOneExcel.excelFilePath;
+        var collectionName = configOneExcel.name;
+        //如果excelFilePath中含有中文，则下述语句会报错！
         var workbook = XLSX.readFile(excelFilePath);
-        var arrCsvRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-        var arrDocuments = fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, excelGisData);
-        fnInsetToMongo(excelName, arrDocuments);
+        var arrRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+        var arrDocuments = fnDealWithArrRows(arrRows, configOneExcel);
+        fnInsetToMongo(collectionName, arrDocuments);
     }
 }
 
@@ -34,24 +32,27 @@ function fnRun() {
  * b、gis数据存储在geom_gps属性下
  * c、geom_gps下存储的是geojson的格式
  * @param arrCsvRows
- * @param objFieldMatchList
- * @param configCsvGisData
+ * @param configOneExcel
  */
-function fnDealWithArrCsvRows(arrCsvRows, objFieldMatchList, configCsvGisData) {
+function fnDealWithArrRows(arrCsvRows, configOneExcel) {
     //下述进行了2次循环，如果合并，应该会提高效率
     //当时，如果把2种操作混合来处理，会导致可读性下降
-    if (objFieldMatchList) {
-        arrCsvRows = fnMatchList(arrCsvRows, objFieldMatchList);
+    if (configOneExcel.objFieldMatchList) {
+        arrCsvRows = fnMatchList(arrCsvRows, configOneExcel.objFieldMatchList);
     }
     var newArrDocuments = [];
     for (var i = 0; i < arrCsvRows.length; i++) {
         var oneCsvRow = arrCsvRows[i];
         var newDocument = {};
-        //mongo中可以使用手动的方式来给_id字段进行赋值吗？
-        newDocument._id = uuidV4();
+        if (configOneExcel._id) {
+            newDocument._id = oneCsvRow[configOneExcel._id].toString();
+            delete oneCsvRow[configOneExcel._id];
+        } else {
+            newDocument._id = uuidV4();
+        }
         newDocument.tag = oneCsvRow;
-        if (configCsvGisData) {
-            newDocument.geom_gps = fnGenerateGeoJson(configCsvGisData, oneCsvRow);
+        if (configOneExcel.gisData) {
+            newDocument.geom_gps = fnGenerateGeoJson(configOneExcel.gisData, oneCsvRow);
         }
         newArrDocuments.push(newDocument);
     }
@@ -116,7 +117,18 @@ function fnGenerateGeoJson(configCsvGisData, oneCsvRow) {
 function fnInsetToMongo(collectionName, arrDocuments) {
     mongoClient.connect(mongodbUrl, function (error, dbMongo) {
         console.log('mongodb连接成功!');
-        insertData(dbMongo, collectionName, arrDocuments);
+        if (config.bRemoveBefor) {
+            var collection = dbMongo.collection(collectionName);
+            collection.remove({}, function (err, numRemoved) {
+                if (err) {
+                    console.log("从" + collectionName + "中清空数据时出错");
+                } else {
+                    insertData(dbMongo, collectionName, arrDocuments);
+                }
+            })
+        } else {
+            insertData(dbMongo, collectionName, arrDocuments);
+        }
     });
 }
 
@@ -133,7 +145,6 @@ function insertData(dbMongo, collectionName, arrDocuments) {
             }
         });
     }
-
 }
 
 fnRun();

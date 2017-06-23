@@ -51,8 +51,14 @@ function fnDealWithArrRows(arrCsvRows, configOneExcel) {
             newDocument._id = uuidV4();
         }
         newDocument.tag = oneCsvRow;
-        if (configOneExcel.gisData) {
-            newDocument.geom_gps = fnGenerateGeoJson(configOneExcel.gisData, oneCsvRow);
+        if (configOneExcel.geom_gps) {
+            newDocument.geom_gps = fnGenerateGeoJson(configOneExcel.geom_gps, oneCsvRow);
+        }
+        if (configOneExcel.geom2d) {
+            newDocument.geom2d = fnGenerateGeoJson(configOneExcel.geom2d, oneCsvRow);
+        }
+        if (configOneExcel.geom) {
+            newDocument.geom = fnGenerateGeoJson(configOneExcel.geom, oneCsvRow);
         }
         newArrDocuments.push(newDocument);
     }

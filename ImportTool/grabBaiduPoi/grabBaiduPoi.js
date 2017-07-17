@@ -29,20 +29,24 @@ function fnGrabBaiduPoi(db) {
         {
             colName: "SCHOOL",
             poiType: "%E5%AD%A6%E6%A0%A1"
+        },
+        {
+            colName: "GASSTATION",
+            poiType: "%E5%8A%A0%E6%B2%B9%E7%AB%99"
         }
     ];
     // var arrCoorType = ["3", "4"];
     //其实无论下述给什么值，返回来的都只是“百度经纬度坐标系”
     var arrCoorType = ["3"];
-    for (var i = 0; i < arrColNameAndType.length; i++) {
-        var objColNameAndType = arrColNameAndType[i];
-        var colName = objColNameAndType.colName;
-        var poiType = objColNameAndType.poiType;
-        for (var j = 0; j < arrCoorType.length; j++) {
-            fnGrabBaiduPoiCell(db, colName, poiType, arrCoorType[j]);
-        }
-    }
-    // fnGrabBaiduPoiCell(db, "hospital", "%E5%8C%BB%E9%99%A2", "3");
+    /*for (var i = 0; i < arrColNameAndType.length; i++) {
+     var objColNameAndType = arrColNameAndType[i];
+     var colName = objColNameAndType.colName;
+     var poiType = objColNameAndType.poiType;
+     for (var j = 0; j < arrCoorType.length; j++) {
+     fnGrabBaiduPoiCell(db, colName, poiType, arrCoorType[j]);
+     }
+     }*/
+    fnGrabBaiduPoiCell(db, "GASSTATION", "%E5%8A%A0%E6%B2%B9%E7%AB%99", "3");
     // fnGrabBaiduPoiCell(db, "hospital", "%E5%8C%BB%E9%99%A2", "4");
     // fnGrabBaiduPoiCell(db, "POLICESTATION", "%E6%B4%BE%E5%87%BA%E6%89%80", "3");
 }
@@ -149,7 +153,7 @@ function fnInsetUrlTodbNew(db, colName, coorType, url) {
             var jsonResult = JSON.parse(body);
             var arrPoiResult = jsonResult.results;
             if (arrPoiResult.length == 0) {
-                //do nothing
+                console.log("出现了空数据");
             } else {
                 var coll = db.collection(colName);
                 for (var i = 0; i < arrPoiResult.length; i++) {

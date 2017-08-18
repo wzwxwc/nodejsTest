@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "terraformer-arcgis-parser": "^1.0.5"
+  }
+}

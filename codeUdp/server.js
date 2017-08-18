@@ -20,15 +20,13 @@ server.on('message', (msg, rinfo) => {
     console.log("收到信息：" + msg16);
     if (msg16) {
         var dataOutput = getDataResponseToHeartBeat(msg16);
-        var ip = fnGetIp(msg16);
-        console.log("ip is " + ip);
         if (dataOutput) {
             // server.send(idResult, rinfo.port, rinfo.address);
             if (i <= 1) {
-                server.send(new Buffer(dataOutput), rinfo.port, ip);
+                server.send(new Buffer(dataOutput), rinfo.port, rinfo.address);
             } else {
                 dataOutput = fnCreateDataOfQuery(msg16);
-                server.send(new Buffer(dataOutput), rinfo.port, ip);
+                server.send(new Buffer(dataOutput), rinfo.port, rinfo.address);
             }
             console.log("向服务器发送：" + dataOutput);
         }
@@ -55,6 +53,8 @@ function getDataResponseToHeartBeat(msg16) {
     return fnAddSpaceBy2(result);
 }
 
+
+//这个ip没有什么意义
 function fnGetIp(msg16) {
     //第16到19位，为终端IP（16进制转换为10进制，之间已点号分割）
     var ipMsg16 = msg16.substr(30, 8);

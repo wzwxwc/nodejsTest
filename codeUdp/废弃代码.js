@@ -1,59 +1,6 @@
 /**
- * Created by zc on 2017/8/15.
+ * Created by zc on 2017/8/21.
  */
-const dgram = require('dgram');
-const server = dgram.createSocket('udp4');
-
-server.on('close', () => {
-    console.log('socket已关闭');
-});
-server.on('error', (err) => {
-    console.log(err);
-});
-server.on('listening', () => {
-    console.log('socket正在监听中...');
-});
-server.on('message', (msg, rinfo) => {
-    var i = 0;
-    console.log(`receive message from ${rinfo.address}:${rinfo.port}`);
-    var msg16 = fnConvert8to16_2(msg);
-    console.log("收到信息：" + msg16);
-    if (msg16) {
-        var dataOutput = getDataResponseToHeartBeat(msg16);
-        if (dataOutput) {
-            // server.send(idResult, rinfo.port, rinfo.address);
-            if (i <= 1) {
-                server.send(new Buffer(dataOutput), rinfo.port, rinfo.address);
-            } else {
-                dataOutput = fnCreateDataOfQuery(msg16);
-                server.send(new Buffer(dataOutput), rinfo.port, rinfo.address);
-            }
-            console.log("向服务器发送：" + dataOutput);
-        }
-    }
-});
-server.bind('8089');
-
-
-/**
- * 心跳包的相应数据
- * @param msg16 已经翻译为16进制的原始响应
- * @returns {*}
- */
-function getDataResponseToHeartBeat(msg16) {
-    var result = "";
-    //1、前面加上固定7B 81 00 10
-    result += "7B810010";
-    //2、加上DTU ID
-    //截取第9位到30位的数据
-    var dtuid = msg16.substring(8, 30);
-    result += dtuid;
-    //结尾加上7B
-    result += "7B";
-    return fnAddSpaceBy2(result);
-}
-
-
 //这个ip没有什么意义
 function fnGetIp(msg16) {
     //第16到19位，为终端IP（16进制转换为10进制，之间已点号分割）
@@ -67,6 +14,12 @@ function fnGetIp(msg16) {
     return ip;
 }
 
+
+/**
+ * 主机向从机发送查询数据包
+ * @param msg16
+ * @returns {string}
+ */
 function fnCreateDataOfQuery(msg16) {
     var dtuid = msg16.substring(8, 30);
     var result = "7B890010";
@@ -83,11 +36,6 @@ function fnAddSpaceBy2(str) {
         var slice = str.substr(i, 2);
         result += slice + "";
     }
-    return result;
-}
-
-function fnConvert8to16_2(buf) {
-    var result = buf.toString('hex');
     return result;
 }
 

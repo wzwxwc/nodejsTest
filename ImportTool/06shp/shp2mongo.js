@@ -5,7 +5,10 @@ var MongoClient = require("mongodb").MongoClient;
 var Shp = require('shp');
 // var DB_URL = "mongodb://admin:safety123@172.17.10.171:27017/mapEditor";
 var DB_URL = "mongodb://localhost/zcuse";
-var shpPath = __dirname + "\\road\\road";
+// var shpPath = __dirname + "\\road\\road";
+// var shpPath = "C:\\Users\\zc\\Desktop\\road\\newRoad\\road";
+var shpPath = "C:\\Users\\zc\\Desktop\\road\\converbyqgis\\road";
+// var shpPath = "C:\\Users\\zc\\Desktop\\road\\createbyarcgis\\test";
 
 function insertData(db, arrNewRow) {
     var colVip = db.collection('user_safety_ROAD');

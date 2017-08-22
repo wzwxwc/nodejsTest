@@ -1,14 +1,14 @@
 {
   "name": "importtool",
-  "version": "0.0.1",
-  "description": "这是一个导出工具的包",
+  "version": "1.0.0",
+  "description": "this is a import data tools",
   "main": "index.js",
   "dependencies": {
     "csv": "^1.1.1",
     "mongodb": "^2.2.28",
     "oracledb": "^1.13.1",
     "request": "^2.81.0",
-    "shp": "^0.0.1",
+    "shp": "0.0.1",
     "uuid": "^3.0.1",
     "xlsx": "^0.10.5"
   },
@@ -16,13 +16,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "no"
+  },
   "keywords": [
-    "mongo",
-    "oracle",
-    "csv",
-    "excel",
-    "mysql",
-    "postgis"
+    "import",
+    "mongo"
   ],
   "author": "zc",
   "license": "ISC"

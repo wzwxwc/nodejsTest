@@ -5,6 +5,7 @@ var MongoClient = require("mongodb").MongoClient;
 var Shp = require('shp');
 // var DB_URL = "mongodb://admin:safety123@172.17.10.171:27017/mapEditor";
 var DB_URL = "mongodb://localhost/zcuse";
+var shpPath = __dirname + "\\road\\road";
 
 function insertData(db, arrNewRow) {
     var colVip = db.collection('user_safety_ROAD');
@@ -20,11 +21,8 @@ function insertData(db, arrNewRow) {
 }
 
 MongoClient.connect(DB_URL, function (error, db) {
-    console.log('连接成功!');
-    // var path = __dirname + "\\data2\\COM_PLANNING";
-    // var path = __dirname + "\\data5\\社区区划";
-    var path = __dirname + "\\road\\road";
-    Shp.readFile(path, function (error, data) {
+    console.log('mongo连接成功!');
+    Shp.readFile(shpPath, function (error, data) {
         if (error) {
             console.log(error);
         } else {
@@ -32,7 +30,6 @@ MongoClient.connect(DB_URL, function (error, db) {
             insertData(db, arrNewRow);
         }
     });
-
 });
 
 function fnDealWithJson(oldJson) {

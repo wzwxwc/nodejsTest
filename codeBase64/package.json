@@ -1,0 +1,15 @@
+{
+  "name": "codebase64",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "base64-img": "^1.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zc",
+  "license": "ISC"
+}

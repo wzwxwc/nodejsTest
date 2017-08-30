@@ -52,7 +52,7 @@ function fnDealWithTcpData(strDataTcp) {
             oneDoc.tag.CONCENTRATION = strOneData.substring(0, strOneData.indexOf(";"));
             var arrItem = strOneData.split(",");
             //时分秒（改成了北京时间）
-            oneDoc.tag.UTCTIME = parseFloat(arrItem[1]) + 80000;
+            oneDoc.tag.UTCTIME = arrItem[1];
             //有效性
             oneDoc.tag.VALIDITYSTATUS = arrItem[2];
             //纬度（需要转换）
@@ -64,7 +64,7 @@ function fnDealWithTcpData(strDataTcp) {
             var LONGITUDE = fnDealWithLatLng(arrItem[5]);
             oneDoc.tag.LONGITUDE_ORIGINAL = arrItem[5];
             //存储地理字段
-            oneDoc.geom = fnCreateGeojson(wd, jd);
+            oneDoc.geom = fnCreateGeojson(LATITUDE, LONGITUDE);
             //经度方向
             oneDoc.tag.EASTORWEST = arrItem[6];
             //地面速度
@@ -73,14 +73,20 @@ function fnDealWithTcpData(strDataTcp) {
             oneDoc.tag.SPEEDDIRECTION = arrItem[8];
             //月日年
             oneDoc.tag.DATE = arrItem[9];
+            //处理后的日期时间格式
+            oneDoc.tag.DATETIME = fnDealWithTime(oneDoc.tag.UTCTIME, oneDoc.tag.DATE);
             //磁偏角
             oneDoc.tag.DECLINATION = arrItem[10];
             //磁偏角方向
             oneDoc.tag.DECLINATIONDIRECTION = arrItem[11];
             //模式指示及校验和
             oneDoc.tag.MODEINDICATION = arrItem[12];
-            //一次轨迹的编号
-            oneDoc.tag.travelId = oneTravelId;
+            //监测类型（如 甲烷CH4， 乙炔）
+            oneDoc.tag.TYPE = "CH4";
+            //数据来源公司
+            oneDoc.tag.FIRMNAME = "大方数据";
+            //一次轨迹的编号（序列编号）
+            oneDoc.tag.LISTCODE = oneTravelId;
             insertData(oneDoc);
         } else {
             //对于浓度值为null和空的信息，不入库
@@ -93,7 +99,7 @@ function fnDealWithLatLng(latOrLang) {
     while (beforPoint.length < 5) {
         beforPoint = "0" + beforPoint;
     }
-    var afterPoint = latOrLang.substring(latOrLang.indexOf(".") + 1);
+    var afterPoint = latOrLang.substr(latOrLang.indexOf(".") + 1, 4);
     var abc = parseFloat(beforPoint.substr(0, 3));
     var de = parseFloat(beforPoint.substr(3, 2));
     var fghi = parseFloat(afterPoint);
@@ -116,5 +122,19 @@ function fnCreateGeojson(lat, lng) {
     var result = {};
     result.type = "Point";
     result.coordinates = [lng, lat];
+    return result;
+}
+
+function fnDealWithTime(utc_hms, mdy) {
+    //除了下述这种方式，有没有更好的方法来生成想要的时间格式？
+    //是否可以不去处理原始的内容，而只是以yymmdd的形式来表示？
+    var year = parseInt(mdy.substr(4, 2));
+    var month = parseInt(mdy.substr(0, 2));
+    var date = parseInt(mdy.substr(2, 2));
+    var h = parseInt(utc_hms.substr(0, 2)) + 8;
+    var m = parseInt(utc_hms.substr(2, 2));
+    var s = parseInt(utc_hms.substr(4, 2));
+    var ms = parseInt(utc_hms.substring(utc_hms.indexOf(".") + 1));
+    var result = new Date(year, month, date, h, m.s, ms);
     return result;
 }
